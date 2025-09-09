@@ -1,3 +1,8 @@
+// daily chart.
+// If you want manual S/R add prices in the Manual SR fields.
+// Turn signalOnly = true to only use alerts. For backtesting, set signalOnly = false.
+// Set alerts on the alert conditions "BuySignal" / "SellSignal".
+
 // @version=5
 strategy("5/10 EMA + Stoch + Daily S/R (EOD signals)", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=1, calc_on_every_tick=false)
 
