@@ -1,5 +1,5 @@
 //----------
-// EMA5_10_Stoch_SR_EOD.cs
+// EMA5_10_Stoch_SR_Signal.cs
 // cTrader cBot skeleton
 //----------
 
