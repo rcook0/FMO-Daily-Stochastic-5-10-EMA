@@ -1,0 +1,52 @@
+//@version=5
+indicator("EMA5/10 + Stoch + SR + Strong Candle Signals", overlay=true, max_labels_count=500)
+//+------------------------------------------------------------------+
+// FEATURES:
+// - EMA 5/10 trend filter
+// - Stochastic confirmation
+// - Strong daily candle confirmation (BodyMinPct configurable)
+// - Manual + pivot-based S/R detection
+// - Near S/R filter
+// - Daily alert messages include symbol, side, price, SL, TP, R:R, nearest SR
+// - Plots arrows / labels on chart
+// INPUTS
+emaFast = input.int(5, "EMA Fast")
+emaSlow = input.int(10, "EMA Slow")
+stochK = input.int(14, "Stochastic %K")
+stochD = input.int(3, "Stochastic %D")
+BodyMinPct = input.float(50.0, "Min Candle Body %")
+UseCandleStrength = input.bool(true, "Use Candle Strength Confirmation")
+NearSRTolerancePct = input.float(0.5, "Near S/R Tolerance %")
+// Manual SR
+SR1 = input.float(0.0, "SR1")
+SR2 = input.float(0.0, "SR2")
+SR3 = input.float(0.0, "SR3")
+SR4 = input.float(0.0, "SR4")
+// Pivot S/R toggle
+UsePivotSR = input.bool(true, "Use Pivot SR")
+PivotLeft = input.int(5, "Pivot Left")
+PivotRight = input.int(5, "Pivot Right")
+// TP / R ratio
+TP_R = input.float(2.0, "TP in R multiples")
+
+//--- EMA Trend
+emaFastVal = ta.ema(close, emaFast)
+emaSlowVal = ta.ema(close, emaSlow)
+
+//--- Placeholder Stoch (for demonstration)
+k = ta.stoch(close, high, low, stochK)
+d = ta.sma(k, stochD)
+
+buySignal = emaFastVal > emaSlowVal and k > d
+sellSignal = emaFastVal < emaSlowVal and k < d
+
+// Strong candle confirmation
+bodyPct = math.abs(close - open) / (high - low) * 100
+if UseCandleStrength
+    buySignal := buySignal and close > open and bodyPct >= BodyMinPct
+    sellSignal := sellSignal and close < open and bodyPct >= BodyMinPct
+
+plotshape(buySignal, title="Buy Signal", style=shape.triangleup, color=color.green, size=size.small)
+plotshape(sellSignal, title="Sell Signal", style=shape.triangledown, color=color.red, size=size.small)
+
+// TODO: Add pivot S/R checks, near SR filter, alerts with CSV-style message
